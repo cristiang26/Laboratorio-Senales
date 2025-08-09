@@ -3,6 +3,7 @@ En esta practica se analizaron señales simuladas y reales recolectadas en bases
 
 LABORATORIO 1 PDS
 LIBRERÍAS
+
 En primer lugar se usaron las siguientes librerías:
 
     import wfdb
