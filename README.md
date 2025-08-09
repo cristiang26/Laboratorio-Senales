@@ -11,9 +11,11 @@ En primer lugar se usaron las siguientes librerías:
     import numpy as np
     from scipy.stats import gaussian_kde
     import random
+    
 La libreria "wfdb" permite leer los registros de datos, como lo es el estudio de las señales ECG, junto con la frecuencia de muestreo de la misma. La libreria "matplotlib.pyplot" se usó para visualizar la gráfica que contenian los datos. "numpy" fue la encargada de facilitar operaciones matemáticas como lo fue los cálculos en vectores. "scipy stats.gaussian_kde" permite estimar la densidad de probabilidad, generando distribuciones de tipo gauss. Finalmente "random" se empleó para introducir distintos ruidos y simular variaciones en la señal.
 
 LECTURA SEÑAL ECG
+
 Tras esto, se prosioguió con la parte de la lectura de la señal ECG y la preparación de los datos, se dio a través del código:
 
     record = wfdb.rdrecord(nombrearchivo)
@@ -25,6 +27,7 @@ Tras esto, se prosioguió con la parte de la lectura de la señal ECG y la prepa
     time = [i / fs for i in range(numerodatos)]  
     signal = signal[:limitartiempo]
     time = time[:limitartiempo]   
+    
 En la primera línea se utiliza la biblioteca ya descrita "wfdb" para leer el archivo de psychonet, de este se extrajo su frecuencia de muestreo (fs), de lo cual solo se limitó a los primeros 10 segundos para facilitar su análisis. Posteriormente se crea un vector de tiempo en segundos, este se calcula dividiendo el índice de cada muestra entre la frecuencia de muestreo (i/fs).
 
 GRÁFICA SEÑAL ORIGINAL
@@ -37,6 +40,7 @@ GRÁFICA SEÑAL ORIGINAL
  plt.legend()
  plt.grid()
  plt.show()
+ 
 En esta parte se usa "matplotlib" para graficar la señal en función del tiempo, en donde sus ejes indican el tiempo en segundos y la Amplituden milivoltios. Lo anterior permite comprender el comportamiento de la onda en el tiempo. El uso de plt.grid añade una cuadrícula que facilita la interpretación de los valores.
 
 Imagen
@@ -52,6 +56,7 @@ HISTOGRAMA DE LA SEÑAL
  plt.title("Histograma de la señal (10s)")
  plt.grid()
  plt.show()
+ 
 El histograma que realizamos permite observar la distribución de amplitudes de la señal ECG. Se divide en 50 intervalos (bins=50), y la frecuencia se normaliza (densidad=True) para que el área total bajo el histograma sume 1. Esto permite comparar la distribución de amplitudes con una función de probabilidad. El histograma es útil para identificar patrones estadísticos en la señal, como la concentración de valores alrededor de los medios. La normalización es particularmente importante cuando se desea comparar histogramas de diferentes señales o con distribuciones teóricas.
 
 Imagen
@@ -79,15 +84,20 @@ CÁLCULO DE ESTADÍSTICA
 
  coeficiente = desviacion_estandar / media if media != 0 else float("nan")
  print(f"El coeficiente es: {coeficiente:.3f}")
+ 
 Aquí se calculan estadísticas clave de la señal:
 
-Medios: Representa el valor promedio de la señal. Es un indicador de la tendencia central de los datos.
+Medios: Representa el valor promedio de la señal.
+Es un indicador de la tendencia central de los datos.
 
-Longitud del vector: Indica el número de muestras en la señal. Esto es útil para entender la resolución temporal de la señal.
+Longitud del vector: Indica el número de muestras en la señal. 
+Esto es útil para entender la resolución temporal de la señal.
 
-Desviación estándar: Mide la dispersión de los valores alrededor de la media. Una desviación estándar alta indica que los valores están más dispersos.
+Desviación estándar: Mide la dispersión de los valores alrededor de la media.
+Una desviación estándar alta indica que los valores están más dispersos.
 
-Coeficiente de variación: Relaciona la desviación estándar con la media, lo que es útil para comparar la variabilidad de señales con diferentes escalas. Estos cálculos son esenciales para caracterizar la señal y entender su comportamiento estadístico.
+Coeficiente de variación: Relaciona la desviación estándar con la media, lo que es útil para comparar la variabilidad de señales con diferentes escalas. 
+Estos cálculos son esenciales para caracterizar la señal y entender su comportamiento estadístico.
 
 FUNCIÓN DE PROBABILIDAD GAUSSIANA
 
@@ -101,6 +111,7 @@ FUNCIÓN DE PROBABILIDAD GAUSSIANA
  plt.title("Función gaussiana de probabilidad de 20s")
  plt.grid()
  plt.show()
+ 
 Se utiliza "gaussian_kde" para estimar la función de densidad de probabilidad (PDF) de la señal. Esta función suaviza el histograma y proporciona una curva continua que describe cómo se distribuyen las amplitudes de la señal. La gráfica resultante es una campana de Gauss, que muestra la probabilidad de que la señal tome ciertos valores de amplitud. Esto es útil para modelar la señal y compararla con distribuciones teóricas. El PDF es una herramienta poderosa en el análisis de señales, ya que permite entender la distribución subyacente de los datos.
 
 Imagen
@@ -112,6 +123,7 @@ a. Ruido Gaussiano
 
     ruido_gauss = [random.gauss(0, 0.1) for _ in range(len(signal))]
     gauss_signal = [signal[i] + ruido_gauss[i] for i in range(len(signal))]
+    
 El ruido gaussiano se genera con media 0 y desviación estándar 0.1, simulando interferencias aleatorias comunes en señales reales. Al sumarlo a la señal original, se obtiene una señal corrupta que mantiene la forma general del ECG pero con distorsiones suaves. Este tipo de ruido es común en sistemas electrónicos y puede ser mitigado con técnicas de filtrado.
 
 Imagen
@@ -122,6 +134,7 @@ b. Ruido de Impulso
 
     ruido_impulso = [random.uniform(-1, 1) if random.random() < 0.05 else 0 for _ in range(len(signal))]
     impulso_signal = [signal[i] + ruido_impulso[i] for i in range(len(signal))]
+    
 Este ruido simula interferencias abruptas, como picos aleatorios. Se genera con una probabilidad del 5% en cada muestra, lo que representa eventos esporádicos pero intensos. Este tipo de ruido es común en entornos con interferencias electromagnéticas y puede ser particularmente problemático porque introduce distorsiones significativas en la señal.
 
 Imagen
@@ -135,6 +148,7 @@ c. Ruido Artefacto
         j = random.randint(0, len(signal) - 1)
        ruido_artefacto[j] += random.uniform(-2, 2)
     artefacto_signal = ruido_artefacto
+    
 El ruido de impulso se caracteriza por su corta duración y una presión sonora que aumenta rápidamente, en la imagen podemos ver una gráfica que nos indica una señal con ruido de impulso que se ve afectada por un tipo de ruido que se caracteriza por picos de tensión o sobresaltos en el suministro de energía, en la cual existen picos muy marcados y violentos los cuales sobresalen del patrón general de la señal lo que es muy característico del ruido impulsivo. Este ruido se debe a precisamente las palpitaciones del paciente, ya que esto genera un nivel ecológico en la medición.
 
 Imagen
@@ -160,6 +174,7 @@ GRAFICACIÓN SEÑALES CON RUIDO
  plt.xlabel("Tiempo (s)")
  plt.ylabel("Amplitud (mv)")
  plt.title("Señal con ruido de artefacto")
+ 
 Cada tipo de ruido se gráfica por separado para visualizar su impacto en la señal ECG. Esto permite comparar cómo cada tipo de ruido afecta la forma de la onda. Por ejemplo, el ruido gaussiano añade fluctuaciones suaves, mientras que el ruido de impulso introduce picos abruptos. La graficación de estas señales es crucial para entender el efecto del ruido y para diseñar técnicas de filtrado adecuadas.
 
 CÁLCULO DE RELACIÓN SEÑAL RUIDO
@@ -174,6 +189,7 @@ CÁLCULO DE RELACIÓN SEÑAL RUIDO
  pot_gauss = potencia(ruido_gauss)
  pot_impulso = potencia(ruido_impulso)
  pot_artefacto = potencia([artefacto_signal[i] - signal[i] for i in range(len(signal))])
+ 
 El SNR es una clave métrica para evaluar la calidad de la señal. Se calcula como la relación entre la potencia de la señal original y la potencia del ruido. Un SNR alto indica que la señal es clara respecto al ruido, mientras que un SNR bajo sugiere que el ruido domina. Este cálculo es crucial para diseñar filtros y técnicas de procesamiento que mejoren la calidad de la señal. El SNR se expresa en decibelios (dB), lo que permite una comparación directa entre diferentes tipos de ruido.
 
 COMPARACIÓN DE SEÑALES
@@ -202,6 +218,7 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+
 En esta sección, se superponen las gráficas de la señal original y las señales con ruido en una sola figura. Esto facilita la comparación visual y permite apreciar cómo cada tipo de ruido distorsiona la señal. La organización en subgráficas (plt.subplot) es especialmente útil para presentar múltiples señales de manera ordenada y clara. Esta comparación es fundamental para evaluar el impacto del ruido y para decidir qué técnicas de procesamiento son necesarias para mejorar la calidad de la señal.
 
 Imagen
