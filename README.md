@@ -14,6 +14,13 @@ import wfdb
 #pip install wfdb #Instalacion en python instalado
 import pandas as pd
 ```
+numpy: Librería para cálculos numéricos y manejo de arreglos (vectores y matrices).
+
+matplotlib.pyplot: Sirve para generar gráficos y visualizar datos.
+
+wfdb: Librería especializada para leer y manipular señales biomédicas del formato PhysioNet, como ECG.
+
+pandas: Manejo de datos en forma de tablas (aunque aquí solo se importa, no se usa mucho).
 ## **1. Descarga e importacion de la señal**
 Se selecciono una señal en la base de datos, lo suficientemente larga para poder hacer todos los calculos estadisticos necesarios de esta señal, esta señal se descargo en formato wfdb.\
 Antes de poder importar la imagen se tuvo que descargar la base de datos de mitdb y creamos un objeto record usando la medicion mitdb/100.
@@ -21,6 +28,13 @@ Antes de poder importar la imagen se tuvo que descargar la base de datos de mitd
 wfdb.dl_database('mitdb', dl_dir='mitdb', records=['100']) 
 record = wfdb.rdrecord('mitdb/100', sampto=60*360) 
 ```
+wfdb.dl_database: descarga registros desde PhysioNet.
+
+'mitdb': es el nombre de la base de datos (MIT-BIH Arrhythmia Database).
+
+dl_dir='mitdb': indica la carpeta donde se guardará.
+
+records=['100'] significa que solo se descarga el registro número 100 (cada registro es un paciente).
 
 Para poder importar, imprimir y mostrar la señal descargada se utilizo el siguiente codigo.
 ```python
