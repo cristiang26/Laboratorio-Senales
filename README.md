@@ -57,7 +57,7 @@ plt.ylabel("Voltaje (mV)")
 plt.plot(t[0:1000],MliiSignal[0:1000])
 ```
 <img width="723" height="572" alt="image" src="https://github.com/user-attachments/assets/dee946f3-1e69-486e-8adb-ca8ea6a61485" />\
-Figura 1. Señal de ECG visualizada en google colab\
+Figura 1. Señal de ECG visualizada en google colab
 
 ## **2. Calculos de variables estadisticos**
 ### **Media**
